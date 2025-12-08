@@ -2,6 +2,7 @@
 using std::cin;
 using std::cout;
 using std::endl;
+#define delimeter "\n----------------------------------\n"
 
 class Human
 {
@@ -179,6 +180,59 @@ public:
 	}
 };
 
+class Graduate : public Student
+{
+	// тема диплома
+	std::string work_theme;
+	// дата защиты диплома
+	std::string defense_date;
+public:
+	// get
+	std::string get_work_theme()const
+	{
+		return work_theme;
+	}
+	std::string get_defense_date()const
+	{
+		return defense_date;
+	}
+	// set
+	void set_work_theme(std::string work_theme)
+	{
+		this->work_theme = work_theme;
+	}
+	void set_defense_date(std::string defense_date)
+	{
+		this->defense_date = defense_date;
+	}
+	// constructors
+	Graduate
+	(
+		const std::string& last_name, const std::string& first_name, int age,
+		const std::string& speciallity,
+		const std::string& group, double rating, double attendance,
+		const std::string& work_theme, const std::string& defense_date
+		) : Student(last_name, first_name, age, speciallity, group, rating, attendance)
+	{
+		set_work_theme(work_theme);
+		set_defense_date(defense_date);
+		cout << "GConstructor" << this << endl;
+	}
+	~Graduate()
+	{
+		cout << "GDestructor" << this << endl;
+	}
+	// methods
+	void info()const
+	{
+		Student::info();
+		cout << work_theme << endl;
+		cout << defense_date << endl;
+	}
+
+
+};
+
 //#define INHERITANCE
 
 void main()
@@ -213,4 +267,8 @@ void main()
 		group[i]->info();
 	}
 
+	Graduate graduate("Фамилия", "Имя", 15, "Разработка ПО", "P_418", 90, 80, "Тема диплома", "12.12.2025");
+	cout << delimeter << endl;
+	graduate.info();
+	cout << delimeter << endl;
 }
