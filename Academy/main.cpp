@@ -81,7 +81,7 @@ public:
 		cout << "AMDestructor:\t" << this << endl;
 	}
 	// methods
-	void info()const
+	void info()const override 
 	{
 		Human::info();
 		cout << speciallity << endl;
@@ -137,7 +137,7 @@ public:
 		cout << "SDestructor:\t" << this << endl;
 	}
 	// methods
-	void info()const
+	void info()const override
 	{
 		AcademyMember::info();
 		cout << group << " " << rating << " " << attendance << endl;
@@ -173,7 +173,7 @@ public:
 	}
 
 	// methods
-	void info()const
+	void info()const override
 	{
 		AcademyMember::info();
 		cout << experience << endl;
@@ -223,7 +223,7 @@ public:
 		cout << "GDestructor" << this << endl;
 	}
 	// methods
-	void info()const
+	void info()const override
 	{
 		Student::info();
 		cout << work_theme << endl;
