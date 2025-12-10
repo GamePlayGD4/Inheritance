@@ -159,9 +159,9 @@ public:
 		cout << group << " " << rating << " " << attendance << endl;
 	}
 };
-std::ostream& operator<<(std::ostream os, const Student& obj)
+std::ostream& operator<<(std::ostream& os, const Student& obj)
 {
-	return os << obj.get_group() << " " << obj.get_rating() << " " << obj.get_attendance();
+	return os << (AcademyMember&)obj << obj.get_group() << " " << obj.get_rating() << " " << obj.get_attendance();
 }
 
 class Teacher :public AcademyMember
@@ -201,7 +201,7 @@ public:
 };
 std::ostream& operator<<(std::ostream& os, const Teacher& obj)
 {
-	return os << obj.get_experience();
+	return os << (AcademyMember&)obj << obj.get_experience();
 }
 
 class Graduate : public Student
@@ -254,8 +254,11 @@ public:
 		cout << defense_date << endl;
 	}
 
-
 };
+std::ostream& operator<<(std::ostream& os, const Graduate& obj)
+{
+	return os << (Student&)obj << obj.get_work_theme();
+}
 
 //#define INHERITANCE
 
@@ -286,15 +289,25 @@ void main()
 		new Student("Татевосян", "Элеонора", 17, "РПО", "Р_418", 98, 48)
 	};
 
-	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
-	{
-		//group[i]->info();
-		cout << delimeter << endl;
-		cout << *dynamic_cast<AcademyMember*>(group[i]) << endl;
-	}
+	//for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+	//{
+	//	//group[i]->info();
+	//	cout << delimeter << endl;
+	//	//cout << *dynamic_cast<AcademyMember*>(group[i]) << endl;
+	//}
 
 	Graduate graduate("Фамилия", "Имя", 15, "Разработка ПО", "P_418", 90, 80, "Тема диплома", "12.12.2025");
 	cout << delimeter << endl;
 	graduate.info();
 	cout << delimeter << endl;
+	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		//group[i]->info();
+		cout << delimeter << endl;
+		cout << typeid(*group[i]).name() << endl;
+		if (typeid(*group[i]) == typeid(Student))cout << *dynamic_cast<Student*>(group[i]) << endl;
+		if (typeid(*group[i]) == typeid(Teacher))cout << *dynamic_cast<Teacher*>(group[i]) << endl;
+		if (typeid(*group[i]) == typeid(Graduate))cout << *dynamic_cast<Graduate*>(group[i]) << endl;
+		//cout << *group[i] << endl;
+	}
 }
