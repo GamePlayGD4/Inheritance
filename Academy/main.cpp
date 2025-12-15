@@ -48,7 +48,7 @@ public:
 	}	
 	virtual std::ostream& info(std::ostream& os)const
 	{
-		return os << last_name << " " << first_name << " " << age << endl;
+		return os << last_name << " " << first_name << " " << age;
 	}
 };
 
@@ -90,8 +90,9 @@ public:
 	// methods
 	std::ostream& info(std::ostream& os)const override  
 	{
-		Human::info(os);
-		return os << speciallity << endl;
+		return Human::info(os) << " " << speciallity;
+		//Human::info(os);
+		//return os << speciallity << endl;
 	}
 };
 
@@ -146,8 +147,9 @@ public:
 	// methods
 	std::ostream& info(std::ostream& os)const override
 	{
-		AcademyMember::info(os);
-		return os << group << " " << rating << " " << attendance << endl;
+		return AcademyMember::info(os) << " " << group << " " << rating << " " << attendance;
+		//AcademyMember::info(os);
+		//return os << group << " " << rating << " " << attendance << endl;
 	}
 };
 
@@ -182,8 +184,9 @@ public:
 	// methods
 	std::ostream& info(std::ostream& os)const override
 	{
-		AcademyMember::info(os);
-		return os << experience << endl;
+		return AcademyMember::info(os) << " " << experience;
+		//AcademyMember::info(os);
+		//return os << experience << endl;
 	}
 };
 
@@ -232,9 +235,10 @@ public:
 	// methods
 	std::ostream& info(std::ostream& os)const override
 	{
-		Student::info(os);
-		return os << work_theme << endl;
-		return os << defense_date << endl;
+		return Student::info(os) << " " << work_theme << " " << defense_date;
+		//Student::info(os);
+		//return os << work_theme << endl;
+		//return os << defense_date << endl;
 	}
 
 
@@ -269,14 +273,16 @@ void main()
 		new Student("Татевосян", "Элеонора", 17, "РПО", "Р_418", 98, 48)
 	};
 
+	cout << delimeter << endl;
 	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
 	{
 		//group[i]->info();
 		cout << *group[i] << endl;
 	}
+	cout << delimeter << endl;
 
 	Graduate graduate("Фамилия", "Имя", 15, "Разработка ПО", "P_418", 90, 80, "Тема диплома", "12.12.2025");
-	cout << delimeter << endl;
+	//cout << delimeter << endl;
 	//graduate.info();
-	cout << delimeter << endl;
+	//cout << delimeter << endl;
 }
