@@ -6,10 +6,18 @@ using std::endl;
 
 class Human
 {
+	static const int LAST_NAME_WIDTH = 12;
+	static const int FIRST_NAME_WIDTH = 12;
+	static const int AGE_WIDTH = 3;
+	static int count;
 	std::string last_name;
 	std::string first_name;
 	int age;
 public:
+	static int get_count()
+	{
+		return count;
+	}
 	const std::string& get_last_name()const
 	{
 		return last_name;
@@ -37,6 +45,7 @@ public:
 	// constructors
 	Human(const std::string& last_name, const std::string& first_name, int age)
 	{
+		count++;
 		set_last_name(last_name);
 		set_first_name(first_name);
 		set_age(age);
@@ -44,13 +53,23 @@ public:
 	}
 	~Human() // ~ + tab
 	{
+		count--;
 		cout << "HDestructor:\t" << this << endl;
 	}	
 	virtual std::ostream& info(std::ostream& os)const
 	{
-		return os << last_name << " " << first_name << " " << age;
+		//return os << last_name << " " << first_name << " " << age;
+		os.width(LAST_NAME_WIDTH);
+		os << std::left;
+		os << last_name;
+		os.width(FIRST_NAME_WIDTH);
+		os << first_name;
+		os.width(AGE_WIDTH);
+		os << age;
+		return os;
 	}
 };
+int Human::count = 0;
 
 std::ostream& operator<<(std::ostream& os, const Human& obj)
 {
@@ -61,15 +80,17 @@ std::ostream& operator<<(std::ostream& os, const Human& obj)
 
 class AcademyMember:public Human
 {
-	std::string speciallity;
+	// ctrl + R + R
+	static const int SPECIALITY_WIDTH = 16;
+	std::string speciality;
 public:
-	const std::string& get_speciallity()const
+	const std::string& get_speciality()const
 	{
-		return speciallity;
+		return speciality;
 	}
-	void set_speciallity(const std::string& speciallity)
+	void set_speciality(const std::string& speciality)
 	{
-		this->speciallity = speciallity;
+		this->speciality = speciality;
 	}
 	//constructors
 	AcademyMember
@@ -77,10 +98,10 @@ public:
 		const std::string& last_name, 
 		const std::string& first_name, 
 		int age, 
-		const std::string& speciallity
+		const std::string& speciality
 	):Human(last_name, first_name, age)
 	{
-		set_speciallity(speciallity);
+		set_speciality(speciality);
 		cout << "AMconstructor" << endl;
 	}
 	~AcademyMember()
@@ -90,7 +111,11 @@ public:
 	// methods
 	std::ostream& info(std::ostream& os)const override  
 	{
-		return Human::info(os) << " " << speciallity;
+		//return Human::info(os) << " " << speciallity;
+		Human::info(os);
+		os.width(SPECIALITY_WIDTH);
+		os << speciality;
+		return os;
 		//Human::info(os);
 		//return os << speciallity << endl;
 	}
@@ -98,6 +123,9 @@ public:
 
 class Student :public AcademyMember
 {
+	static const int GROUP_WIDTH = 8;
+	static const int RATING_WIDTH = 8;
+	static const int ATTENDANCE_WIDTH = 8;
 	std::string group;
 	double rating;
 	double attendance;
@@ -147,7 +175,15 @@ public:
 	// methods
 	std::ostream& info(std::ostream& os)const override
 	{
-		return AcademyMember::info(os) << " " << group << " " << rating << " " << attendance;
+		AcademyMember::info(os);
+		os.width(GROUP_WIDTH);
+		os << group;
+		os.width(RATING_WIDTH);
+		os << rating;
+		os.width(ATTENDANCE_WIDTH);
+		os << attendance;
+		return os;
+		//return AcademyMember::info(os) << " " << group << " " << rating << " " << attendance;
 		//AcademyMember::info(os);
 		//return os << group << " " << rating << " " << attendance << endl;
 	}
@@ -184,7 +220,7 @@ public:
 	// methods
 	std::ostream& info(std::ostream& os)const override
 	{
-		return AcademyMember::info(os) << " " << experience;
+		return AcademyMember::info(os) << experience;
 		//AcademyMember::info(os);
 		//return os << experience << endl;
 	}
@@ -281,8 +317,10 @@ void main()
 	}
 	cout << delimeter << endl;
 
-	Graduate graduate("Фамилия", "Имя", 15, "Разработка ПО", "P_418", 90, 80, "Тема диплома", "12.12.2025");
+	//Graduate graduate("Фамилия", "Имя", 15, "Разработка ПО", "P_418", 90, 80, "Тема диплома", "12.12.2025");
 	//cout << delimeter << endl;
 	//graduate.info();
 	//cout << delimeter << endl;
+
+	cout << "Количество участников группы: " << Human::get_count() << endl;
 }
