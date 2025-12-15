@@ -46,11 +46,18 @@ public:
 	{
 		cout << "HDestructor:\t" << this << endl;
 	}	
-	virtual void info()const
+	virtual std::ostream& info(std::ostream& os)const
 	{
-		cout << last_name << " " << first_name << " " << age << endl;
+		return os << last_name << " " << first_name << " " << age << endl;
 	}
 };
+
+std::ostream& operator<<(std::ostream& os, const Human& obj)
+{
+	//obj.info();
+	//return os << obj.get_last_name() << " " << obj.get_first_name() << " " << obj.get_age();
+	return obj.info(os);
+}
 
 class AcademyMember:public Human
 {
@@ -81,10 +88,10 @@ public:
 		cout << "AMDestructor:\t" << this << endl;
 	}
 	// methods
-	void info()const override 
+	std::ostream& info(std::ostream& os)const override  
 	{
-		Human::info();
-		cout << speciallity << endl;
+		Human::info(os);
+		return os << speciallity << endl;
 	}
 };
 
@@ -137,10 +144,10 @@ public:
 		cout << "SDestructor:\t" << this << endl;
 	}
 	// methods
-	void info()const override
+	std::ostream& info(std::ostream& os)const override
 	{
-		AcademyMember::info();
-		cout << group << " " << rating << " " << attendance << endl;
+		AcademyMember::info(os);
+		return os << group << " " << rating << " " << attendance << endl;
 	}
 };
 
@@ -173,10 +180,10 @@ public:
 	}
 
 	// methods
-	void info()const override
+	std::ostream& info(std::ostream& os)const override
 	{
-		AcademyMember::info();
-		cout << experience << endl;
+		AcademyMember::info(os);
+		return os << experience << endl;
 	}
 };
 
@@ -223,11 +230,11 @@ public:
 		cout << "GDestructor" << this << endl;
 	}
 	// methods
-	void info()const override
+	std::ostream& info(std::ostream& os)const override
 	{
-		Student::info();
-		cout << work_theme << endl;
-		cout << defense_date << endl;
+		Student::info(os);
+		return os << work_theme << endl;
+		return os << defense_date << endl;
 	}
 
 
@@ -251,7 +258,7 @@ void main()
 
 	Teacher teacher("Einstein", "Albert", 146, "Astronomy", 120);
 	teacher.info();
-#endif // INHERITANCE
+#endif // INHERITANCE	
 
 	Human* group[] =
 	{
@@ -264,11 +271,12 @@ void main()
 
 	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
 	{
-		group[i]->info();
+		//group[i]->info();
+		cout << *group[i] << endl;
 	}
 
 	Graduate graduate("Фамилия", "Имя", 15, "Разработка ПО", "P_418", 90, 80, "Тема диплома", "12.12.2025");
 	cout << delimeter << endl;
-	graduate.info();
+	//graduate.info();
 	cout << delimeter << endl;
 }
