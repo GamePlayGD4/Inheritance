@@ -51,7 +51,7 @@ public:
 		set_age(age);
 		cout << "HConstructor:\t" << this << endl;
 	}
-	~Human() // ~ + tab
+	virtual ~Human() // ~ + tab
 	{
 		count--;
 		cout << "HDestructor:\t" << this << endl;
@@ -210,11 +210,11 @@ public:
 	) :AcademyMember(last_name, first_name, age, speciallity)
 	{
 		set_experience(experience);
-		cout << "TConstructor" << this << endl;
+		cout << "TConstructor: " << "\t" << this << endl;
 	}
 	~Teacher()
 	{
-		cout << "TDestructor" << this << endl;
+		cout << "TDestructor: " << "\t" << this << endl;
 	}
 
 	// methods
@@ -322,5 +322,9 @@ void main()
 	//graduate.info();
 	//cout << delimeter << endl;
 
+	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		delete group[i];
+	}
 	cout << "Количество участников группы: " << Human::get_count() << endl;
 }
