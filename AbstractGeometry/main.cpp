@@ -8,14 +8,70 @@ enum Color
 	Green = 0x0000FF00,
 	Blue = 0x00FF0000,
 	Yellow = 0x0000FFFF,
-	Purple = 0x00800080
+	Purple = 0x00800080,
+	White = 0x00FFFFFF,
+	Black = 0x00000000,
 };
+
+#define SHAPE_TAKE_PARAMETERS int start_x, int start_y, int line_width, Color color
+#define SHAPE_GIVE_PARAMETERS start_x, start_y, line_width, color
 
 class Shape
 {
+	static const int MIN_START_X = 100;
+	static const int MIN_START_Y = 100;
+	static const int MAX_START_X = 1000;
+	static const int MAX_START_Y = 700;
+	static const int MIN_LINE_WIDTH = 1;
+	static const int MAX_LINE_WIDTH = 32;
+protected:
 	Color color;
+	int start_x;
+	int start_y;
+	int line_width;
 public:
-	Shape(Color color) :color(color) {}
+	int get_start_x()const
+	{
+		return start_x;
+	}
+	int get_start_y()const
+	{
+		return start_y;
+	}
+	int get_line_width()const
+	{
+		return line_width;
+	}
+	void set_start_x(int start_x)
+	{
+		if (start_x < MIN_START_X)start_x = MIN_START_X;
+		if (start_x > MAX_START_X)start_x = MAX_START_X;
+		this->start_x = start_x;
+	}
+	void set_start_y(int start_y)
+	{
+		if (start_y < MIN_START_Y)start_y = MIN_START_Y;
+		if (start_y > MAX_START_Y)start_y = MAX_START_Y;
+		this->start_y = start_y;
+	}
+	void set_line_width(int line_width)
+	{
+		if (line_width < MIN_LINE_WIDTH) line_width = MIN_LINE_WIDTH;
+		if (line_width > MAX_LINE_WIDTH) line_width = MAX_LINE_WIDTH;
+		this->line_width = line_width;
+	}
+	double filter_size(double size)
+	{
+		if (size < 20)size = 20;
+		if (size > 800)size = 500;
+		return size;
+	}
+	Shape(SHAPE_TAKE_PARAMETERS) :color(color)
+	{
+		set_start_x(start_x);
+		set_start_y(start_y);
+		set_line_width(line_width);
+	}
 	virtual ~Shape() {}
 	virtual double get_area() const = 0;
 	virtual double get_perimeter() const = 0;
@@ -32,14 +88,14 @@ class Square :public Shape
 {
 	double side;
 public:
-	Square(double side, Color color) :Shape(color)
+	Square(double side, SHAPE_TAKE_PARAMETERS) :Shape(SHAPE_GIVE_PARAMETERS)
 	{
-		this->side = side;
+		set_side(side);
 	}
 	~Square() {}
 	void set_side(double side)
 	{
-		this->side = side;
+		this->side = filter_size(side);
 	}
 	double get_side()const
 	{
@@ -66,13 +122,13 @@ public:
 		HWND hwnd = GetConsoleWindow();
 		HDC hdc = GetDC(hwnd);
 
-		HPEN hPen = CreatePen(PS_SOLID, 5, Color::Red);
-		HBRUSH hBrush = CreateSolidBrush(Color::Red);
+		HPEN hPen = CreatePen(PS_SOLID, line_width, color);
+		HBRUSH hBrush = CreateSolidBrush(color);
 
 		SelectObject(hdc, hPen);
 		SelectObject(hdc, hBrush);
 
-		Rectangle(hdc, 300, 300, 500, 500);
+		Rectangle(hdc, start_x, start_y, start_x + side, start_y + side);
 
 		DeleteObject(hBrush);
 		DeleteObject(hPen);
@@ -91,7 +147,7 @@ void main()
 {
 	setlocale(LC_ALL, "");
 	//Shape shape = Color::Red;
-	Square square(5, Color::Red);
+	Square square(50000, -300, -300, 1, Color::White);
 	//cout << "Сторона квадрата: " << square.get_side() << endl;
 	//cout << "Площадь фигуры: " << square.get_area() << endl;
 	//cout << "Периметр фигуры: " << square.get_perimeter() << endl;
