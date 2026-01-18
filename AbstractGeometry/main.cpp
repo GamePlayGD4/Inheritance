@@ -1,5 +1,7 @@
+#define _USE_MATH_DEFINES
 #include<Windows.h>
 #include<iostream>
+#include<math.h> // for PI
 using namespace std;
 
 enum Color
@@ -143,14 +145,66 @@ public:
 	}
 };
 
+class Circle: public Shape
+{
+	double radius;
+public:
+	Circle(double radius, SHAPE_TAKE_PARAMETERS) :Shape(SHAPE_GIVE_PARAMETERS)
+	{
+		set_radius(radius);
+	}
+	~Circle() {}
+	void set_radius(double radius)
+	{
+		this->radius = radius;
+	}
+	double get_radius()const
+	{
+		return radius;
+	}
+	double get_area() const 
+	{
+		return M_PI * radius * radius;
+	}
+	//длина окружности
+	double get_perimeter ()const 
+	{
+		return 2 * M_PI * radius;
+	}
+	void info()
+	{
+		cout << "Радиус круга: " << radius << endl;
+		cout << "Площадь круга: " << get_area() << endl;
+		cout << "Длина окружности: " << get_perimeter() << endl;
+		draw();
+
+	}
+	void draw()const override
+	{
+		HWND hwnd = GetConsoleWindow();
+		HDC hdc = GetDC(hwnd);
+
+		HPEN hPen = CreatePen(PS_SOLID, line_width, color);
+		HBRUSH hBrush = CreateSolidBrush(color);
+
+		SelectObject(hdc, hPen);
+		SelectObject(hdc, hBrush);
+
+		Ellipse(hdc, start_x, start_y, start_x + radius, start_y + radius);
+
+		DeleteObject(hBrush);
+		DeleteObject(hPen);
+
+		ReleaseDC(hwnd, hdc);
+	}
+};
+
 void main()
 {
 	setlocale(LC_ALL, "");
 	//Shape shape = Color::Red;
 	Square square(50000, -300, -300, 1, Color::White);
-	//cout << "Сторона квадрата: " << square.get_side() << endl;
-	//cout << "Площадь фигуры: " << square.get_area() << endl;
-	//cout << "Периметр фигуры: " << square.get_perimeter() << endl;
-	//square.draw();
-	square.info();
+	//square.info();
+	Circle circle(100, -300, -300, 1, Color::White);
+	circle.info();
 }
