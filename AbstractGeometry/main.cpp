@@ -17,8 +17,8 @@ namespace Geometry
 		Black = 0x00000000,
 	};
 
-#define SHAPE_TAKE_PARAMETERS int start_x, int start_y, int line_width, Color color
-#define SHAPE_GIVE_PARAMETERS start_x, start_y, line_width, color
+#define SHAPE_TAKE_PARAMETERS int start_x, int start_y, int line_width, Color color, Color fill_color = Color::Black
+#define SHAPE_GIVE_PARAMETERS start_x, start_y, line_width, color, fill_color
 
 	class Shape
 	{
@@ -32,6 +32,7 @@ namespace Geometry
 		static const int MAX_SIZE = 500;
 	protected:
 		Color color;
+		Color fill_color;
 		int start_x;
 		int start_y;
 		int line_width;
@@ -75,7 +76,7 @@ namespace Geometry
 			this->line_width = line_width;*/
 			this->line_width =
 				line_width < MIN_LINE_WIDTH ? MIN_LINE_WIDTH :
-				line_width < MAX_LINE_WIDTH ? MAX_LINE_WIDTH :
+				line_width > MAX_LINE_WIDTH ? MAX_LINE_WIDTH :
 				line_width;
 		}
 		double filter_size(double size)
@@ -88,7 +89,7 @@ namespace Geometry
 				size > MAX_SIZE ? MAX_SIZE :
 				size;
 		}
-		Shape(SHAPE_TAKE_PARAMETERS) :color(color)
+		Shape(SHAPE_TAKE_PARAMETERS) :color(color), fill_color(fill_color)
 		{
 			set_start_x(start_x);
 			set_start_y(start_y);
@@ -145,7 +146,7 @@ namespace Geometry
 			HDC hdc = GetDC(hwnd);
 
 			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
-			HBRUSH hBrush = CreateSolidBrush(color);
+			HBRUSH hBrush = CreateSolidBrush(fill_color);
 
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
@@ -168,7 +169,7 @@ namespace Geometry
 
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
-			HPEN hPen = CreatePen(PS_SOLID, 10, Geometry::Color::Black);
+			HPEN hPen = CreatePen(PS_SOLID, 1, color);
 			HBRUSH hBrush = CreateSolidBrush(color);
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
@@ -223,12 +224,14 @@ namespace Geometry
 			HDC hdc = GetDC(hwnd);
 
 			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
-			HBRUSH hBrush = CreateSolidBrush(color);
+			HBRUSH hBrush = CreateSolidBrush(fill_color);
 
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 
-			Ellipse(hdc, start_x, start_y, start_x + radius, start_y + radius);
+			Ellipse(hdc, start_x, start_y, start_x + radius * 2, start_y + 2 * radius);
+			MoveToEx(hdc, start_x + radius, start_y + radius, NULL);
+			LineTo(hdc, start_x + radius * 2, start_y + radius);
 
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
@@ -278,7 +281,7 @@ namespace Geometry
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
 			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
-			HBRUSH hBrush = CreateSolidBrush(color);
+			HBRUSH hBrush = CreateSolidBrush(fill_color);
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 
@@ -353,7 +356,7 @@ namespace Geometry
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
 			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
-			HBRUSH hBrush = CreateSolidBrush(color);
+			HBRUSH hBrush = CreateSolidBrush(fill_color);
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 
@@ -365,6 +368,9 @@ namespace Geometry
 			};
 
 			Polygon(hdc, vertices, 3);
+
+			MoveToEx(hdc, start_x + side / 2, start_y, NULL);
+			LineTo(hdc, start_x + side / 2, start_y + get_height());
 
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
@@ -416,7 +422,7 @@ namespace Geometry
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
 			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
-			HBRUSH hBrush = CreateSolidBrush(color);
+			HBRUSH hBrush = CreateSolidBrush(fill_color);
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 
@@ -428,6 +434,9 @@ namespace Geometry
 			};
 
 			Polygon(hdc, vertices, 3);
+
+			MoveToEx(hdc, start_x + base / 2, start_y, NULL);
+			LineTo(hdc, start_x + base / 2, start_y + get_height());
 
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
@@ -509,22 +518,33 @@ void main()
 {
 	setlocale(LC_ALL, "");
 	//Shape shape = Color::Red;
-	Geometry::Square square(1000, -300, -600, 1, Geometry::Color::White);
+	Geometry::Square square(100, -300, -300, 1, Geometry::Color::White);
 	square.info();
 	square.draw_diagonal();
 	Geometry::Circle circle(100, 1000, -2000, 1, Geometry::Color::Yellow);
 	circle.info();
 
-	Geometry::Rectangle rect(200, 100, 100, 300, 5, Geometry::Color::Red);
+	Geometry::Rectangle rect(200, 400, 100, 300, 5, Geometry::Color::Red);
 	rect.info();
 	rect.draw_diagonal();
 
-	Geometry::EquilateralTriangle e_triangle(80, 500, 300, 32, Geometry::Color::Green);
+	Geometry::EquilateralTriangle e_triangle(80, 500, 300, 8, Geometry::Color::Green);
 	e_triangle.info();
 
-	Geometry::IsoscelesTriangle iso_triangle(100, 80, 700, 300, 32, Geometry::Color::Purple);
+	Geometry::IsoscelesTriangle iso_triangle(100, 80, 700, 300, 8, Geometry::Color::Purple);
 	iso_triangle.draw();
 
 	Geometry::RightTriangle r_triangle(100, 50, 800, 400, 5, Geometry::Color::White);
 	r_triangle.info();
+
+	while (true)
+	{
+		square.draw();
+		square.draw_diagonal();
+		rect.draw();
+		rect.draw_diagonal();
+		circle.draw();
+		iso_triangle.draw();
+		r_triangle.draw();
+	}
 }
