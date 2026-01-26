@@ -4,6 +4,9 @@
 #include<math.h> // for PI
 using namespace std;
 
+//#define SQUARE_FULL
+//#define EQUILATERAL_FULL
+
 namespace Geometry
 {
 	enum Color
@@ -107,6 +110,7 @@ namespace Geometry
 		}
 	};
 
+#ifdef SQUARE_FULL
 	class Square :public Shape
 	{
 		double side;
@@ -182,6 +186,8 @@ namespace Geometry
 			ReleaseDC(hwnd, hdc);
 		}
 	};
+#endif // SQUARE_FULL
+
 
 	class Circle : public Shape
 	{
@@ -309,6 +315,13 @@ namespace Geometry
 			ReleaseDC(hwnd, hdc);
 		}
 	};
+	
+	class Square :public Rectangle
+	{
+	public:
+		Square(double side, SHAPE_TAKE_PARAMETERS) :Rectangle(side, side, SHAPE_GIVE_PARAMETERS) {}
+		~Square() {}
+	};
 
 	class Triangle : public Shape
 	{
@@ -322,6 +335,8 @@ namespace Geometry
 			Shape::info();
 		}
 	};
+
+#ifdef EQUILATERAL_FULL
 	class EquilateralTriangle :public Triangle
 	{
 		double side;
@@ -377,6 +392,8 @@ namespace Geometry
 			ReleaseDC(hwnd, hdc);
 		}
 	};
+#endif // EQUILATERAL_FULL
+
 	class IsoscelesTriangle : public Triangle
 	{
 		double base;
@@ -443,6 +460,15 @@ namespace Geometry
 			ReleaseDC(hwnd, hdc);
 		}
 	};
+
+	class EquilateralTriangle :public IsoscelesTriangle
+	{
+	public:
+		EquilateralTriangle(double side, SHAPE_TAKE_PARAMETERS) :IsoscelesTriangle(side, side, SHAPE_GIVE_PARAMETERS) {}
+		~EquilateralTriangle() {}
+
+	};
+
 	class RightTriangle : public Triangle
 	{
 		double cathet_1;
