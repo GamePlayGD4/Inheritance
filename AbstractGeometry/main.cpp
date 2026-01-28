@@ -236,8 +236,24 @@ namespace Geometry
 			SelectObject(hdc, hBrush);
 
 			Ellipse(hdc, start_x, start_y, start_x + radius * 2, start_y + 2 * radius);
-			MoveToEx(hdc, start_x + radius, start_y + radius, NULL);
-			LineTo(hdc, start_x + radius * 2, start_y + radius);
+			//MoveToEx(hdc, start_x + radius, start_y + radius, NULL);
+			//LineTo(hdc, start_x + radius * 2, start_y + radius);
+
+			//
+			int cx = start_x + radius; // center x
+			int cy = start_y + radius; // center y
+
+			double angleDeg = 30.0;
+			double angleRad = angleDeg * M_PI / 180.0;
+
+			int x = cx + int(radius * cos(angleRad));
+			int y = cy - int(radius * sin(angleRad)); 
+
+			MoveToEx(hdc, cx, cy, NULL);
+	
+			LineTo(hdc, x, y);
+
+			//
 
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
@@ -547,7 +563,7 @@ void main()
 	Geometry::Square square(100, -300, -300, 1, Geometry::Color::White);
 	square.info();
 	square.draw_diagonal();
-	Geometry::Circle circle(100, 1000, -2000, 1, Geometry::Color::Yellow);
+	Geometry::Circle circle(100, 500, -2000, 1, Geometry::Color::Yellow);
 	circle.info();
 
 	Geometry::Rectangle rect(200, 400, 100, 300, 5, Geometry::Color::Red);
